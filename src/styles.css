@@ -68,6 +68,7 @@ a {
   overflow: hidden;
   position: relative;
   cursor: grab;
+  touch-action: none;
   background-color: #0d141b;
   background-image: linear-gradient(rgba(92, 119, 136, 0.13) 1px, transparent 1px),
     linear-gradient(90deg, rgba(92, 119, 136, 0.13) 1px, transparent 1px);
@@ -513,6 +514,7 @@ button:disabled {
     linear-gradient(90deg, rgba(92, 119, 136, 0.13) 1px, transparent 1px);
   background-repeat: repeat;
   cursor: grab;
+  touch-action: none;
 }
 
 .layout-editor-viewport:active {
@@ -540,4 +542,104 @@ button:disabled {
   width: auto;
   padding: 0 10px;
   font-size: 12px;
+}
+
+@media (max-width: 720px) {
+  .navbar {
+    min-height: 64px;
+    padding: 14px 16px;
+    gap: 14px;
+  }
+
+  .navbar-links {
+    gap: 14px;
+    font-size: 12px;
+  }
+
+  .shiplog-viewport,
+  .empty-shiplog,
+  .admin-login {
+    height: calc(100vh - 64px);
+  }
+
+  .card-detail-page,
+  .static-page {
+    padding: 24px 16px 40px;
+  }
+
+  .card-detail-title {
+    padding: 14px 16px;
+  }
+
+  .card-detail-content,
+  .card-detail-image,
+  .card-detail-skills {
+    padding: 14px;
+  }
+
+  .card-detail-image {
+    padding: 0;
+    height: 190px;
+  }
+
+  .admin-dashboard {
+    padding: 18px 16px 28px;
+  }
+
+  .admin-header h1 {
+    font-size: 24px;
+  }
+
+  .admin-tabs {
+    gap: 4px;
+    margin-bottom: 18px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .admin-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .admin-tabs button {
+    flex: 0 0 auto;
+    margin-right: 8px;
+    padding: 8px 3px;
+    font-size: 13px;
+  }
+
+  .layout-editor-viewport {
+    height: 62vh;
+    min-height: 360px;
+  }
+
+  .inline-form,
+  .form-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .inline-form > *,
+  .form-actions > * {
+    width: 100%;
+  }
+
+  .linkedin-import,
+  .stacked-form {
+    max-width: none;
+  }
+
+  .zoom-controls {
+    right: 10px;
+    bottom: 10px;
+  }
+
+  .zoom-controls button {
+    min-width: 38px;
+    min-height: 38px;
+  }
+
+  .zoom-controls button:last-child {
+    padding: 0 8px;
+  }
 }

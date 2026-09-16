@@ -58,6 +58,20 @@ export default function LayoutEditor({ cards, categories, connections, onChange 
     panHandlers.onMouseMove(e)
   }
 
+  function onTouchMove(e) {
+    if (cardDragRef.current) {
+      const touch = e.touches[0]
+      if (!touch) return
+      const { cardId, startX, startY, origin } = cardDragRef.current
+      const dx = (touch.clientX - startX) / scale
+      const dy = (touch.clientY - startY) / scale
+      setPositions((prev) => ({ ...prev, [cardId]: { x: origin.x + dx, y: origin.y + dy } }))
+      e.preventDefault()
+      return
+    }
+    panHandlers.onTouchMove(e)
+  }
+
   async function onMouseUp() {
     if (cardDragRef.current) {
       const { cardId } = cardDragRef.current
@@ -86,6 +100,10 @@ export default function LayoutEditor({ cards, categories, connections, onChange 
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseUp}
         onWheel={panHandlers.onWheel}
+        onTouchStart={panHandlers.onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={panHandlers.onTouchEnd}
+        onTouchCancel={panHandlers.onTouchCancel}
       >
         <div className="shiplog-canvas" style={{ width: CANVAS_SIZE.width, height: CANVAS_SIZE.height, ...canvasStyle }}>
           <ConnectionsLayer
