@@ -36,7 +36,8 @@ que visita o site.
   manualmente mantêm suas coordenadas salvas.
 - **Conexões são livres:** o admin escolhe manualmente quais cards se
   ligam, se a linha tem seta (direcional) ou não, e pode deixar um card
-  sem nenhuma conexão.
+  sem nenhuma conexão. Além da aba Conexões, o admin pode ativar o modo
+  "Linkar cards" no editor de Layout e clicar na origem e no destino.
 - **Login do admin é simples** (e-mail/senha via Supabase Auth) — sem
   OAuth, sem 2FA por enquanto.
 - **Importação do LinkedIn:** o LinkedIn não tem API pública pra isso e

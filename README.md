@@ -54,7 +54,8 @@ Pela área de admin você pode:
 - **Conexões**: ligar dois cards, escolhendo se a linha tem seta ou não.
   Um card sem nenhuma conexão fica sozinho — não precisa ligar tudo.
 - **Layout**: arrastar os cards pra reposicionar; a posição é salva na hora
-  e vale pra todo mundo que visitar o site.
+  e vale pra todo mundo que visitar o site. Ative "Linkar cards" para clicar
+  no card de origem e depois no destino, com opção de criar a conexão com seta.
 
 ### 4. Deploy na Vercel
 

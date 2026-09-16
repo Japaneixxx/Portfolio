@@ -5,7 +5,8 @@ import CardNode from '../components/CardNode.jsx'
 import ConnectionsLayer from '../components/ConnectionsLayer.jsx'
 import ZoomControls from '../components/ZoomControls.jsx'
 
-const CANVAS_SIZE = { width: 3000, height: 2000 }
+const CANVAS_SIZE = { width: 6000, height: 4000 }
+const CANVAS_PADDING = { x: 1500, y: 1000 }
 
 export default function ShipLog() {
   const [cards, setCards] = useState([])
@@ -14,13 +15,16 @@ export default function ShipLog() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const { viewportRef, scale, offset, canvasStyle, handlers, zoomIn, zoomOut, reset } = usePanZoom()
+  const { viewportRef, scale, offset, canvasStyle, handlers, zoomIn, zoomOut, reset } = usePanZoom(
+    { x: 0, y: 0 },
+    CANVAS_SIZE,
+  )
 
   const gridStyle = {
-    backgroundPosition: `calc(50% - 1500px + ${offset.x}px) calc(50% - 1000px + ${offset.y}px)`,
+    backgroundPosition: `calc(50% - 3000px + ${offset.x}px) calc(50% - 2000px + ${offset.y}px)`,
     backgroundSize: `${80 * scale}px ${80 * scale}px`,
-    '--axis-x': `${offset.x + 1500 * (scale - 1)}px`,
-    '--axis-y': `${offset.y + 1000 * (scale - 1)}px`,
+    '--axis-x': `${offset.x + 3000 * (scale - 1)}px`,
+    '--axis-y': `${offset.y + 2000 * (scale - 1)}px`,
   }
 
   useEffect(() => {
@@ -52,7 +56,11 @@ export default function ShipLog() {
 
   const cardsById = {}
   cards.forEach((c) => {
-    cardsById[c.id] = c
+    cardsById[c.id] = {
+      ...c,
+      position_x: c.position_x + CANVAS_PADDING.x,
+      position_y: c.position_y + CANVAS_PADDING.y,
+    }
   })
 
   if (loading) return <div className="page-loading">Carregando diário de bordo…</div>
@@ -83,7 +91,11 @@ export default function ShipLog() {
             key={card.id}
             card={card}
             categoryColorKey={categories[card.category_id]?.color_key}
-            style={{ position: 'absolute', left: card.position_x, top: card.position_y }}
+            style={{
+              position: 'absolute',
+              left: card.position_x + CANVAS_PADDING.x,
+              top: card.position_y + CANVAS_PADDING.y,
+            }}
           />
         ))}
       </div>
