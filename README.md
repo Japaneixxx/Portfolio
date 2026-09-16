@@ -36,6 +36,10 @@ npm run dev
 Acesse `http://localhost:5173` pro site e `http://localhost:5173/admin` pra
 área de admin (login com o usuário criado no passo 3 acima).
 
+Na Vercel, a rota `/admin` também funciona diretamente graças ao rewrite
+configurado em `vercel.json`. O link Admin aparece no menu, mas o dashboard
+continua protegido pelo login do Supabase.
+
 ### 3. Colocar conteúdo
 
 Pela área de admin você pode:
