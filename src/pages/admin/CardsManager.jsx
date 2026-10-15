@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { supabase } from '../../lib/supabaseClient.js'
 import { parseLinkedInExport, parseLinkedInPdf } from '../../lib/linkedinImport.js'
+import { resolveCardImageUrl } from '../../lib/cardImage.js'
 
 const DEFAULT_CARD_POSITION = { x: 1400, y: 890 }
 
@@ -48,11 +49,15 @@ export default function CardsManager({ cards, categories, onChange }) {
     e.preventDefault()
     setError(null)
 
+    const imageUrl = await resolveCardImageUrl({
+      image_url: form.image_url.trim(),
+      external_url: form.external_url.trim(),
+    })
     const payload = {
       title: form.title,
       subtitle: form.subtitle || null,
       category_id: form.category_id || null,
-      image_url: form.image_url || null,
+      image_url: imageUrl || null,
       content: form.content || null,
       external_url: form.external_url || null,
       skills: form.skills

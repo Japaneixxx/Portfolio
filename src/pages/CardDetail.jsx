@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient.js'
 import { colorFor } from '../lib/palette.js'
 import { getPublicDataCache, loadBundledPublicData, savePublicDataCache } from '../lib/publicDataCache.js'
-import CachedImage from '../components/CachedImage.jsx'
+import CardImage from '../components/CardImage.jsx'
 
 export default function CardDetail() {
   const { id } = useParams()
@@ -73,11 +73,7 @@ export default function CardDetail() {
         </div>
         <div className="card-detail-side">
           <div className="card-detail-image" style={{ borderColor: colors.border }}>
-            {card.image_url ? (
-              <CachedImage src={card.image_url} alt={card.title} />
-            ) : (
-              <div className="card-node-image-placeholder" />
-            )}
+            <CardImage card={card} />
           </div>
           {card.skills?.length > 0 && (
             <div className="card-detail-skills" style={{ borderColor: colors.border }}>

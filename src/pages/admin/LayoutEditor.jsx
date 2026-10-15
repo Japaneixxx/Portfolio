@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { supabase } from '../../lib/supabaseClient.js'
+import { resolveCardImageUrl } from '../../lib/cardImage.js'
 import { usePanZoom } from '../../lib/usePanZoom.js'
 import CardNode from '../../components/CardNode.jsx'
 import ConnectionsLayer from '../../components/ConnectionsLayer.jsx'
@@ -113,13 +114,17 @@ export default function LayoutEditor({ cards, categories, connections, onChange 
     if (!selectedCardId || !editForm) return
     setSavingCard(true)
     setEditError(null)
+    const imageUrl = await resolveCardImageUrl({
+      image_url: editForm.image_url.trim(),
+      external_url: editForm.external_url.trim(),
+    })
     const result = await supabase
       .from('cards')
       .update({
         title: editForm.title,
         subtitle: editForm.subtitle || null,
         category_id: editForm.category_id || null,
-        image_url: editForm.image_url || null,
+        image_url: imageUrl || null,
         content: editForm.content || null,
         skills: editForm.skills
           ? editForm.skills.split(',').map((skill) => skill.trim()).filter(Boolean)
