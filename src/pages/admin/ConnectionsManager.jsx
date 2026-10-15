@@ -38,7 +38,7 @@ export default function ConnectionsManager({ cards, connections, onChange }) {
     <div className="admin-section">
       <h2>Conexões</h2>
       <p className="admin-hint">
-        Um card sem nenhuma conexão fica sozinho no diário de bordo — não é obrigatório ligar tudo.
+        Um card sem nenhuma conexão fica sozinho no Portifolio — não é obrigatório ligar tudo.
       </p>
       <ul className="admin-list">
         {connections.map((conn) => (

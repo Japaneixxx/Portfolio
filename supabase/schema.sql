@@ -11,7 +11,7 @@ create table if not exists categories (
   created_at timestamptz not null default now()
 );
 
--- Cada "nó" do diário de bordo
+-- Cada "nó" do Portifolio
 create table if not exists cards (
   id uuid primary key default gen_random_uuid(),
   title text not null,

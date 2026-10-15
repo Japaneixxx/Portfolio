@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { colorFor } from '../lib/palette.js'
+import CachedImage from './CachedImage.jsx'
 
 export default function CardNode({ card, categoryColorKey, style, onDragStart, onClick }) {
   const navigate = useNavigate()
@@ -18,7 +19,7 @@ export default function CardNode({ card, categoryColorKey, style, onDragStart, o
       <div className="card-node-subtitle">{card.subtitle || ''}</div>
       <div className="card-node-image">
         {card.image_url ? (
-          <img src={card.image_url} alt={card.title} />
+          <CachedImage src={card.image_url} alt={card.title} />
         ) : (
           <div className="card-node-image-placeholder" />
         )}

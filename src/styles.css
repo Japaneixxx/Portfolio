@@ -141,6 +141,28 @@ a {
   text-align: center;
 }
 
+.shiplog-shell {
+  position: relative;
+  height: calc(100vh - 73px);
+  display: flex;
+  flex-direction: column;
+}
+
+.offline-banner {
+  padding: 10px 16px;
+  border-bottom: 1px solid #7c6330;
+  background: #2a2111;
+  color: #f1cc77;
+  font-size: 13px;
+  text-align: center;
+}
+
+.shiplog-shell .shiplog-viewport {
+  height: auto;
+  flex: 1;
+  min-height: 0;
+}
+
 /* Card node */
 .card-node {
   z-index: 2;
@@ -380,6 +402,22 @@ button:disabled {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.admin-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.admin-header-actions .link-button {
+  margin-left: 0;
+}
+
+.admin-export-message {
+  color: var(--text-dim);
+  font-size: 13px;
+  margin: 8px 0 0;
 }
 
 .admin-tabs {

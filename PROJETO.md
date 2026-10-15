@@ -1,12 +1,19 @@
-# PROJETO.md — Diário de Bordo (portfólio pessoal)
+# PROJETO.md — Portifolio pessoal
 
-Este arquivo existe pra qualquer pessoa (ou IA) conseguir continuar este
-projeto sem precisar reconstruir o contexto do zero. Leia isto antes de
-mexer no código.
+Este arquivo existe para registrar as decisões e o estado do portfólio para
+manutenção futura. Leia isto antes de mexer no código.
+
+Este é um projeto pessoal em repositório público, mantido como referência do
+processo de construção do portfólio. Não tratar o código como um template ou
+como uma aplicação pronta para terceiros simplesmente compilarem e usarem.
+
+Trechos de código podem ser estudados e reaproveitados em outros projetos.
+Textos, imagens, identidade visual e dados são específicos do portfólio e não
+fazem parte desse reaproveitamento.
 
 ## O que é
 
-Site de portfólio pessoal ("Japa") inspirado no Ship Log (diário de bordo)
+Site de portfólio pessoal ("Japa") inspirado no Ship Log
 de Outer Wilds: cards representando projetos, empresas, instituições de
 ensino e prêmios, espalhados por um canvas navegável (arrastar + zoom),
 conectados por linhas configuráveis (com ou sem seta). Uma área de admin
@@ -49,6 +56,13 @@ que visita o site.
   quando os dados importados mudam, preservando posição, imagem e habilidades.
   O PDF do perfil também é aceito como alternativa, mas sua extração é
   aproximada e sempre requer revisão da prévia.
+- **Resiliência do conteúdo público:** a home e os detalhes usam a última
+  leitura válida salva no navegador quando o Supabase fica indisponível.
+  Também podem usar um `public/fallback-data.json` acompanhado da pasta
+  `public/images/`, gerados pelo botão **Exportar fallback** no admin.
+- **Backup operacional:** depois de alterações importantes, o admin deve
+  gerar novamente o ZIP de fallback e atualizar os arquivos estáticos do
+  deploy. O fallback não substitui o banco; ele é uma cópia de emergência.
 
 ## Estrutura de pastas
 
@@ -59,11 +73,14 @@ src/
     AuthContext.jsx      contexto React com a sessão de auth do admin
     usePanZoom.js         hook de arrastar+zoom, reusado no ShipLog e no LayoutEditor
     palette.js            mapa color_key -> hex (cyan, coral, amber, pink, purple, teal)
+    publicDataCache.js    cache local e leitura do fallback estático
+    exportFallback.js     exportação do backup em ZIP pelo admin
   components/
     Navbar.jsx
     CardNode.jsx          o card individual (faixa de título colorida + imagem)
     ConnectionsLayer.jsx   camada SVG com as linhas entre cards
     ZoomControls.jsx       botões +/-/reset de zoom
+    CachedImage.jsx         cache local e fallback para imagens
   pages/
     ShipLog.jsx            home: canvas navegável com todos os cards
     CardDetail.jsx          página de detalhe de um card (/card/:id)
@@ -99,16 +116,18 @@ npm run dev
 Rodar `supabase/schema.sql` no SQL Editor do Supabase antes de tudo, e
 criar um usuário em Authentication → Users pra logar em `/admin`.
 
-## O que falta / próximos passos combinados com o usuário
+## Estado atual e próximos passos
 
-1. **Ajuste fino visual** pra bater 100% com o Figma do usuário (link:
+1. **Ajuste fino visual** para bater 100% com o Figma do usuário (link:
    `https://www.figma.com/design/ROt2Pgy4WK0bcXuqBdflZf/Portifolio` — não
    é acessível por fetch automático, precisa de prints ou descrição
    manual do usuário). Cores atuais são uma aproximação (paleta em
    `src/lib/palette.js`), fonte de título usa Space Grotesk como
    aproximação da fonte retrô do Ship Log.
-2. **Deploy na Vercel** ainda não foi feito (projeto está só local /
-   zip até agora).
+2. **Deploy na Vercel** ainda precisa ser configurado quando o conteúdo
+  estiver pronto.
+3. **Fallback estático:** gerar o ZIP pelo admin e copiar seu conteúdo para
+  `public/fallback-data.json` e `public/images/` antes do deploy.
 
 ## Convenções de estilo do código
 

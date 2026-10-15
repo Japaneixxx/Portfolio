@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient.js'
+import { getPublicDataCache, loadBundledPublicData, savePublicDataCache } from '../lib/publicDataCache.js'
 import { usePanZoom } from '../lib/usePanZoom.js'
 import CardNode from '../components/CardNode.jsx'
 import ConnectionsLayer from '../components/ConnectionsLayer.jsx'
@@ -14,6 +15,7 @@ export default function ShipLog() {
   const [connections, setConnections] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [offline, setOffline] = useState(false)
 
   const { viewportRef, scale, offset, canvasStyle, handlers, zoomIn, zoomOut, reset } = usePanZoom(
     { x: 0, y: 0 },
@@ -35,8 +37,22 @@ export default function ShipLog() {
         supabase.from('connections').select('*'),
       ])
 
-      if (cardsRes.error || categoriesRes.error || connectionsRes.error) {
-        setError(cardsRes.error || categoriesRes.error || connectionsRes.error)
+      const requestError = cardsRes.error || categoriesRes.error || connectionsRes.error
+      if (requestError) {
+        const cached = getPublicDataCache() || (await loadBundledPublicData())
+        if (!cached) {
+          setError(requestError)
+          setLoading(false)
+          return
+        }
+        const cachedCategories = {}
+        cached.categories.forEach((category) => {
+          cachedCategories[category.id] = category
+        })
+        setCategories(cachedCategories)
+        setCards(cached.cards)
+        setConnections(cached.connections)
+        setOffline(true)
         setLoading(false)
         return
       }
@@ -49,6 +65,11 @@ export default function ShipLog() {
       setCategories(categoriesById)
       setCards(cardsRes.data)
       setConnections(connectionsRes.data)
+      savePublicDataCache({
+        cards: cardsRes.data,
+        categories: categoriesRes.data,
+        connections: connectionsRes.data,
+      })
       setLoading(false)
     }
     load()
@@ -63,7 +84,7 @@ export default function ShipLog() {
     }
   })
 
-  if (loading) return <div className="page-loading">Carregando diário de bordo…</div>
+  if (loading) return <div className="page-loading">Carregando Portifolio…</div>
   if (error)
     return (
       <div className="page-loading">Não foi possível carregar os dados. Verifique a configuração do Supabase.</div>
@@ -72,34 +93,37 @@ export default function ShipLog() {
   if (cards.length === 0) {
     return (
       <div className="empty-shiplog">
-        <p>Nenhum registro ainda. Entre em /admin para começar a preencher o diário de bordo.</p>
+        <p>Nenhum registro ainda. Entre em /admin para começar a preencher o Portifolio.</p>
       </div>
     )
   }
 
   return (
-    <div className="shiplog-viewport" ref={viewportRef} style={gridStyle} {...handlers}>
-      <div className="shiplog-canvas" style={{ width: CANVAS_SIZE.width, height: CANVAS_SIZE.height, ...canvasStyle }}>
-        <ConnectionsLayer
-          connections={connections}
-          cardsById={cardsById}
-          width={CANVAS_SIZE.width}
-          height={CANVAS_SIZE.height}
-        />
-        {cards.map((card) => (
-          <CardNode
-            key={card.id}
-            card={card}
-            categoryColorKey={categories[card.category_id]?.color_key}
-            style={{
-              position: 'absolute',
-              left: card.position_x + CANVAS_PADDING.x,
-              top: card.position_y + CANVAS_PADDING.y,
-            }}
+    <div className="shiplog-shell">
+      {offline && <div className="offline-banner">Exibindo a última versão salva. O banco de dados está temporariamente indisponível.</div>}
+      <div className="shiplog-viewport" ref={viewportRef} style={gridStyle} {...handlers}>
+        <div className="shiplog-canvas" style={{ width: CANVAS_SIZE.width, height: CANVAS_SIZE.height, ...canvasStyle }}>
+          <ConnectionsLayer
+            connections={connections}
+            cardsById={cardsById}
+            width={CANVAS_SIZE.width}
+            height={CANVAS_SIZE.height}
           />
-        ))}
+          {cards.map((card) => (
+            <CardNode
+              key={card.id}
+              card={card}
+              categoryColorKey={categories[card.category_id]?.color_key}
+              style={{
+                position: 'absolute',
+                left: card.position_x + CANVAS_PADDING.x,
+                top: card.position_y + CANVAS_PADDING.y,
+              }}
+            />
+          ))}
+        </div>
+        <ZoomControls zoomIn={zoomIn} zoomOut={zoomOut} reset={reset} />
       </div>
-      <ZoomControls zoomIn={zoomIn} zoomOut={zoomOut} reset={reset} />
     </div>
   )
 }
