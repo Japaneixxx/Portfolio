@@ -82,6 +82,3 @@ supabase/
 ```
 
 ## O que ainda falta (próximos passos combinados)
-
-- Ajuste fino de tipografia/paleta pra bater 100% com o Figma.
-- Zoom no diário de bordo (hoje só existe pan/arraste).
