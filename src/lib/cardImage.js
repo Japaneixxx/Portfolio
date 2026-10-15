@@ -1,7 +1,32 @@
 const IMAGE_URL_PATTERN = /\.(avif|gif|jpe?g|png|svg|webp)(?:[?#]|$)/i
 
+function youtubeThumbnailUrl(url) {
+  try {
+    const parsedUrl = new URL(url)
+    let videoId = null
+
+    if (parsedUrl.hostname === 'youtu.be') {
+      videoId = parsedUrl.pathname.slice(1).split('/')[0]
+    } else if (parsedUrl.hostname.endsWith('youtube.com')) {
+      videoId = parsedUrl.searchParams.get('v')
+      if (!videoId && /^\/(shorts|embed|live)\//.test(parsedUrl.pathname)) {
+        videoId = parsedUrl.pathname.split('/')[2]
+      }
+    }
+
+    if (!videoId || !/^[\w-]{11}$/.test(videoId)) return null
+    return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
+  } catch {
+    return null
+  }
+}
+
 export function imageUrlFor(card) {
   if (card.image_url) return card.image_url
+  if (card.external_url) {
+    const youtubeImageUrl = youtubeThumbnailUrl(card.external_url)
+    if (youtubeImageUrl) return youtubeImageUrl
+  }
   if (card.external_url && IMAGE_URL_PATTERN.test(card.external_url)) return card.external_url
   return null
 }
